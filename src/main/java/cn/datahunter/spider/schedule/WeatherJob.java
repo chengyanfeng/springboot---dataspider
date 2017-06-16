@@ -209,8 +209,8 @@ public class WeatherJob {
 
         try {
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time + ".csv"), "UTF-8", resultData);
-            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气" + ".csv"), "UTF-8", resultData);
-            uplaodAndURL.upload(time, new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time + ".csv"), "mrocker", "2");
+            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time +"天气" + ".csv"), "UTF-8", resultData);
+            uplaodAndURL.upload(time, new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time + "天气" + ".csv"), "mrocker", "2");
         } catch (IOException e) {
             e.printStackTrace();
         }
