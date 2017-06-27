@@ -30,7 +30,8 @@ public class CommonUtils {
      * ep:201702
      */
     public static String getBeforeMonth(Integer month) {
-        String currentMonth = dateTime.minusMonths(month).toString("yyyyMM");
+        DateTime dateTimecurrentMonth = new DateTime();
+        String currentMonth = dateTimecurrentMonth.minusMonths(month).toString("yyyyMM");
         return currentMonth;
     }
 
@@ -38,7 +39,8 @@ public class CommonUtils {
      * 自定义时间格式,返回年月日
      */
     public static String getBeforeMonth(Integer month, String format) {
-        String currentMonth = dateTime.minusMonths(month).toString(format);
+        DateTime dateTimecurrentMonth = new DateTime();
+        String currentMonth = dateTimecurrentMonth.minusMonths(month).toString(format);
         return currentMonth;
     }
 
@@ -139,5 +141,7 @@ public class CommonUtils {
         }
 
     }
+
+
 
 }

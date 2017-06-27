@@ -23,7 +23,7 @@ public class PopulationNew {
         Population();
     }
 
-  /*  public static void main(String[] args) {
+  /* public static void main(String[] args) {
         Population();
 
     }*/
@@ -41,7 +41,7 @@ public class PopulationNew {
         char ch='A';
         String year=null;
         //判断文件是否存在，如果存在就获取最近一年的，如果不存在就获取所有的18个月的。
-        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/各地区人口数量.csv"))
+        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/全国地区人口统计.csv"))
         {
             year="1";
         }else

@@ -23,7 +23,7 @@ public class AgriculturalSidelineProducts {
         agriculturalProducts();
     }
 
-  /*  public static void main(String[] args) {
+    /*public static void main(String[] args) {
         agriculturalProducts();
 
     }*/
@@ -41,7 +41,7 @@ public class AgriculturalSidelineProducts {
        char ch='A';
         String month=null;
         //判断文件是否存在，如果存在就获取最近一个月的，如果不存在就获取所有的18个月的。
-        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/各地区农副产品价格指数.csv"))
+        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/全国地区农产品价格指数.csv"))
         {
             month="1";
         }else

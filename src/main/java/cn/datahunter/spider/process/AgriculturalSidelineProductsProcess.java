@@ -76,7 +76,7 @@ public class AgriculturalSidelineProductsProcess implements PageProcessor {
          */
         if(GNPandGDPUtil.timp==1){
             for(int i=0;i<datalist.size();i=i+4) {
-                GNPandGDPUtil.DATALIST.add(datalist.get(0+i) + "," +
+                GNPandGDPUtil.DATALIST.add(datalist.get(0+i).replace("自治区","").replace("省","").replace("市","") + "," +
                         datalist.get(1+i) + "," +
                         datalist.get(2+i)
                         + "," +
@@ -99,7 +99,7 @@ try {
          FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
          FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + ".csv"), "UTF-8", dataOut);
             //上传到服务器中
-         uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2");
+         uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2");
      }
         } catch (IOException e) {
             e.printStackTrace();

@@ -62,7 +62,7 @@ public class PopulationProcessnew implements PageProcessor {
         List<String> datalist = AgriculturalMap.get("data");
         if(GNPandGDPUtil.timp==1){
             for(int i=0;i<datalist.size();i=i+4) {
-                GNPandGDPUtil.DATALIST.add(datalist.get(0+i) + "," +
+                GNPandGDPUtil.DATALIST.add(datalist.get(0+i).replace("自治区","").replace("省","").replace("市", "") + "," +
                         datalist.get(1+i) + "," +
                         datalist.get(2+i)
                         + "," +
@@ -86,8 +86,8 @@ public class PopulationProcessnew implements PageProcessor {
                 dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
                 dataOut.addAll(GNPandGDPUtil.DATALIST);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
-                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + ".csv"), "UTF-8", GNPandGDPUtil.DATALIST);
-                uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2");
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + ".csv"), "UTF-8", dataOut);
+                uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,7 +97,8 @@ public class PopulationProcessnew implements PageProcessor {
     public Map<String,List> getPopulation(List<String> dataLst,JSONObject returnData){
         Map<String,List> map=new HashMap<>();
         JSONArray dataArrname = returnData.getJSONArray("wdnodes");
-        GNPandGDPUtil.ColumnName=dataArrname.getJSONObject(0).getJSONArray("nodes").getJSONObject(0).getString("cname");
+        GNPandGDPUtil.ColumnName=dataArrname.getJSONObject(0).getJSONArray("nodes").getJSONObject(0).getString("cname")
+                +"("+dataArrname.getJSONObject(0).getJSONArray("nodes").getJSONObject(0).getString("unit")+")";
         JSONArray nodes=dataArrname.getJSONObject(1).getJSONArray("nodes");
         JSONArray dataArr = returnData.getJSONArray("datanodes");
         //获取众多个年份

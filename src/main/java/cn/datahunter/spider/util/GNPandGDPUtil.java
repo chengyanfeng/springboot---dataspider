@@ -15,17 +15,17 @@ public class GNPandGDPUtil {
     //省份居民年度数据---GNP
     public static final  String AREA_GNP_YEAR="地区居民年度数据";
     // 省份居民季度数据---GNP
-    public static final  String AREA_GNP_MONTH="地区居民季度数据";
+    public static final  String AREA_GNP_MONTH="全国居民GNP统计";
     //全国GDP每年的数据---GDP
     public static final String CONTRY_GDP_YEAR="全国GDP每年的数据";
     //省份GDP每年的数据---GDP
-    public static final String AREA_GDP_YEAR="省份GDP每年的数据";
+    public static final String AREA_GDP_YEAR="全国地区GDP统计";
     //各个地级市GDP每年的数据--GDP
     public static final String AREA_GDP_CITY="各个地级市GDP每年的数据";
     //各个地级市GDP每年的数据--GDP
-    public static final String AREA_AGRICULTURAL="各地区农副产品价格指数";
+    public static final String AREA_AGRICULTURAL="全国地区农产品价格指数";
     //各省市人口数据
-    public static  final String AREA_POP="各地区人口数量";
+    public static  final String AREA_POP="全国地区人口统计";
     //接收数据的list
     public static List<String> DATALIST=new ArrayList<>() ;
     //接收名字的list

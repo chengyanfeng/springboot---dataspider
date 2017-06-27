@@ -23,7 +23,7 @@ public class GrossDomesticproduct {
         grossDomestcProduct();
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         grossDomestcProduct();
 
     }*/
@@ -38,8 +38,8 @@ public class GrossDomesticproduct {
         String url = "";
         char ch='A';
         String year=null;
-        //判断文件是否存在，如果存在就获取最近一个月的，如果不存在就获取所有的18个月的。
-        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/省份GDP每年的数据.csv"))
+        //判断文件是否存在，如果存在就获取最近一个月的，如果不存在就获取所有的20年的的。
+        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/全国地区GDP统计.csv"))
         {
             year="1";
         }else

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -26,13 +27,18 @@ public class WeatherJob {
     /**
      * 当天主要城市/区县 天气
      */
+   /*public static void main(String[] args) throws IOException {
+        getTodayWeather(false);
+        getTodayWeather(true);
+
+    }*/
 
 
     @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
     public void execute1() throws ParseException, IOException {
 
         getTodayWeather(false);
-        getTodayWeather(true);
+       //getTodayWeather(true);
     }
 
     /**
@@ -138,13 +144,13 @@ public class WeatherJob {
      * 当天区县/主要城市天气
      * countryFlag true表示区县，false是主要城市
      */
-    private void getTodayWeather(boolean countryFlag) throws IOException {
+    private  void getTodayWeather(boolean countryFlag) throws IOException {
 
         //区县或主要城市
         Map<String, String> area3Map = countryFlag ? getAreaMap() : getMainSimpleMap();
 
-        String columnName = countryFlag ? "区县,城市,省份,日期,天气,最低气温,最高气温,风向,风速" :
-                "城市,省份,日期,天气,最低气温,最高气温,风向,风速,空气质量级别";
+        String columnName = countryFlag ? "区县,城市,省份,天气,最低气温,最高气温,风向,风速,时间" :
+                "城市,省份,天气,最低气温,最高气温,风向,风速,空气质量级别,时间";
 
         List<String> resultData = new ArrayList<>();
         resultData.add(columnName);
@@ -167,23 +173,23 @@ public class WeatherJob {
             String citynm = jsonObj.getString("citynm");
             fullInformation.append(citynm).append(",").append(cityAndProvince).append(",");
 
-            String day = jsonObj.getString("days");
-            fullInformation.append(day).append(",");
+
 
             String weather = jsonObj.getString("weather");
             fullInformation.append(weather).append(",");
 
             String temp_low = jsonObj.getString("temp_low");
-            fullInformation.append(temp_low).append(",");
+            fullInformation.append(temp_low+"℃").append(",");
 
             String temp_high = jsonObj.getString("temp_high");
-            fullInformation.append(temp_high).append(",");
+            fullInformation.append(temp_high+"℃").append(",");
 
             String wind = jsonObj.getString("wind");
             fullInformation.append(wind).append(",");
 
             String winp = jsonObj.getString("winp");
             fullInformation.append(winp);
+            String day = jsonObj.getString("days");
 
             if (!countryFlag) {
                 String url = "http://api.k780.com:88/?app=weather.pm25&weaid=" + weaid + "&appkey=23789&sign=abe1ba69c5f65c3fd1d95c535a5f7ed4&format=json";
@@ -194,13 +200,14 @@ public class WeatherJob {
                 fullInformation.append(",").append(aqi_levnm);
             }
 
+            fullInformation.append(",").append(day);
             resultData.add(fullInformation.toString());
 
-            try {
+           /* try {
                 Thread.sleep(7500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
         String catalog = countryFlag ? Constants.CATALOG_WEATHER_COUNTRY : Constants.CATALOG_WEATHER_MAINCITY;
@@ -208,18 +215,25 @@ public class WeatherJob {
         String time = CommonUtils.getBeforeMonth(0, "yyyy-MM-dd");
 
         try {
-            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time + ".csv"), "UTF-8", resultData);
-            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time +"天气" + ".csv"), "UTF-8", resultData);
-            uplaodAndURL.upload(time, new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + time + "天气" + ".csv"), "mrocker", "2");
+            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据"  +".csv"), "UTF-8", resultData);
+
+            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +"-"+"天气数据" + ".csv"), "UTF-8", resultData);
+           System.out.print("-----------------已经输出文件了------------------");
+
+            uplaodAndURL.upload("天气数据", new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据" + ".csv"), "mrocker", "2");
+                System.out.print("-------------------------文件已经上传上去了-------------------");
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.print("输出出现异常");
+        }finally {
+            Thread.currentThread().interrupt();
         }
     }
 
     /**
      * 获取主要城市数据
      */
-    private Map<String, String> getMainSimpleMap() {
+    private  Map<String, String> getMainSimpleMap() {
 
         Map<String, String> mainCityMap = new HashMap<>();
         mainCityMap.put("beijing", "北京");
@@ -265,7 +279,7 @@ public class WeatherJob {
     /**
      * 获取区县cityid等数据
      */
-    private Map<String, String> getAreaMap() throws IOException {
+    private  Map<String, String> getAreaMap() throws IOException {
 
         String jsonString =
                 CommonUtils.getRemoteData("http://api.k780.com:88/?app=weather.city&cou=1&appkey=23789&sign=abe1ba69c5f65c3fd1d95c535a5f7ed4&format=json");

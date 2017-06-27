@@ -6,14 +6,17 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.CharsetUtils;
 import org.apache.http.util.EntityUtils;
 
@@ -158,8 +161,8 @@ public class uplaodAndURL {
      */
     public List<File>  getListFiles(){
         List<File> files=new ArrayList<File>();
-        files.add(new File("E:\\InterfaceAPI\\地区居民季度数据.csv"));
-        files.add(new File("E:\\InterfaceAPI\\地区居民年度数据.csv"));
+        files.add(new File("F:\\data\\dataspider\\InterfaceAPI\\weather_maincity\\天气数据.csv"));
+        /*files.add(new File("E:\\InterfaceAPI\\地区居民年度数据.csv"));
         files.add(new File("E:\\InterfaceAPI\\各地区农副产品价格指数.csv"));
         files.add(new File("E:\\InterfaceAPI\\全国GDP每年的数据.csv"));
         files.add(new File("E:\\InterfaceAPI\\全国居民季度收支表.csv"));
@@ -175,10 +178,121 @@ public class uplaodAndURL {
         files.add(new File("E:\\InterfaceAPI\\postCode\\全国邮编.csv"));
         files.add(new File("E:\\InterfaceAPI\\province\\居民消费价格指数.csv"));
         files.add(new File("E:\\InterfaceAPI\\regioncode\\全国行政区位码.csv"));
-
+*/
 
         return files;
 
     }
+    /**
+     * 发送post请求微信接口
+     */
 
+    public static JSONObject weiXinPost(String url,String beginData,String endData){
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        JSONObject accessToken=null;
+        try {
+
+            HttpPost post = new HttpPost(url);
+            //创建参数列表
+            JSONObject jo = new JSONObject();
+            jo.put("begin_date",beginData);
+            jo.put("end_date",endData);
+            //StringEntity格式编码,跟上面的不一样，因为 HttpEntity entity；不能传递json数据
+            StringEntity stringEntity=new StringEntity(jo.toString(), HTTP.UTF_8);
+            post.setEntity(stringEntity);
+            System.out.println("\n"+"POST 请求...." + post.getURI());
+
+            //执行请求
+            CloseableHttpResponse httpResponse = httpclient.execute(post);
+            try{
+                System.out.println("获取返回状态---->"+httpResponse.getStatusLine());
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                //获取接口的数据转换成json
+               accessToken = JSONObject.parseObject(EntityUtils.toString(entity,
+                        Charset.forName("UTF-8")));
+
+                if (null != entity){
+                    System.out.println("-------------------------------------------------------");
+
+                    System.out.println("-------------------------------------------------------");
+                }
+            } finally{
+                httpResponse.close();
+            }
+
+        } catch( UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally{
+            try{
+                if(httpclient !=null){
+                    httpclient.close();
+                }
+
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+return accessToken;
+    }
+    public static String weiXinGetAccess_token(String url){
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+       String Access_token=null;
+        try {
+
+            HttpGet GET = new HttpGet(url);
+
+            System.out.println("\n"+"GET 请求...." + GET.getURI());
+
+            //执行请求
+            CloseableHttpResponse httpResponse = httpclient.execute(GET);
+            try{
+                System.out.println("获取返回状态---->"+httpResponse.getStatusLine());
+
+                HttpEntity entity = httpResponse.getEntity();
+                //必须要用EntityUtils中utf-8 转换才能看到返回的信息数据。
+               /* System.out.println(EntityUtils.toString(entity,
+                        Charset.forName("UTF-8")));*/
+                //把获取的数据以UTF-8转换成string.
+                JSONObject accessToken = JSONObject.parseObject(EntityUtils.toString(entity,
+                        Charset.forName("UTF-8")));
+
+               //获取json数据中的access_token的值
+                Access_token = accessToken.getString("access_token");
+                if (null != entity){
+                    System.out.println("-------------------------------------------------------");
+                    //好吧!我终于发现问题了,原来是html = EntityUtils.toString(entity);这句导致了后面的写入文件错误.entity所得到的流是不可重复读取的也就是说所得的到实体只能一次消耗完,不能多次读取,所以在执行html = EntityUtils.toString(entity)后,流就关闭了,就导致后面的读和写显示错误.
+                    System.out.println(accessToken.toString());
+                    System.out.println("-------------------------------------------------------");
+                }
+            } finally{
+                httpclient.close();
+
+            }
+
+        } catch( UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally{
+            try{
+                if(httpclient !=null){
+                    httpclient.close();
+                }
+
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+return Access_token;
+    }
 }

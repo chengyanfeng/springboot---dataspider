@@ -40,7 +40,7 @@ public class GrossNationalproduct {
         char ch='A';
         String month=null;
         //判断文件是否存在，如果存在就获取最近一个月的，如果不存在就获取所有的18个月的。
-        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/地区居民季度数据.csv"))
+        if(CommonUtils.loctionFileexist("/data/dataspider/InterfaceAPI/全国居民GNP统计.csv"))
         {
             month="1";
         }else
