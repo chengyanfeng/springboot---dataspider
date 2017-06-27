@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -49,12 +50,228 @@ public class weiXinData {
                 PayForUtil.NAMELIST.addAll(PayForUtil.getCategory(category));
             }
 
+            for(int i=0;i<12;i++){
+                //有几列就添加几列空数据
+                if(i==0){PayForUtil.DATALIST.add("");}
+               else if(i<11&&i>0) {PayForUtil.DATALIST.add("0");}
+
+                else if(i==11){
+                    PayForUtil.DATALIST.add(begin_date);
+                }
+
+            }
+
+
+
+        }
+        else{
+            //不为空的情况下添加NAMELIST
+            if(PayForUtil.NAMELIST.size()==0){
+                PayForUtil.NAMELIST.addAll(PayForUtil.getCategory(category));
+
+            }
+            //不为空的情况下则取出DATALIST数据
+            for(int i=0;i<weiXinData.getJSONArray("list").size(); i++){
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("title"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("int_page_read_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ori_page_read_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("add_to_fav_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("int_page_read_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msgid"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ori_page_read_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("user_source"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("add_to_fav_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date"));
+            }
+
+
+
+        }
+        //若获取的就是昨天的日期的话，那么输出文件
+        if(begin_date.equals(PayForUtil.getFormatterDate(new Date()))){
+            List dataOut=new ArrayList<>();
+            dataOut.add(CommonUtils.removeBrackets(PayForUtil.NAMELIST.toString()));
+            for(int i=0;i<PayForUtil.DATALIST.size();i=i+12){
+                dataOut.add(PayForUtil.DATALIST.get(i+0)+","+
+                        PayForUtil.DATALIST.get(i+1)+","+
+                        PayForUtil.DATALIST.get(i+2)+","+
+                        PayForUtil.DATALIST.get(i+3)+","+
+                        PayForUtil.DATALIST.get(i+4)+","+
+                        PayForUtil.DATALIST.get(i+5)+","+
+                        PayForUtil.DATALIST.get(i+6)+","+
+                        PayForUtil.DATALIST.get(i+7)+","+
+                        PayForUtil.DATALIST.get(i+8)+","+
+                        PayForUtil.DATALIST.get(i+9)+","+
+                        PayForUtil.DATALIST.get(i+10)+","+
+                        PayForUtil.DATALIST.get(i+11));
+            }
+            try {
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + begin_date + ".csv"), "UTF-8", dataOut);
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + ".csv"), "UTF-8", dataOut);
+                //上传到服务器中
+                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2");
+
+            }catch (Exception e){
+                System.out.print(e.toString());
+            }finally {
+                PayForUtil.DATALIST.clear();
+                PayForUtil.NAMELIST.clear();
+            }
+        }
+    }
+
+    @Test
+    //获取图文统计分时数据
+    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+    public void getPhotoArticleHourAllData(){
+
+        String category="userreadhour";
+
+        //循环取出历史记录
+        for(Integer i=0;i<PayForUtil.getDateLong(category);i++){
+            //获取一天的数据
+
+            String begin_date = PayForUtil.getDate(i,category);
+
+            getPhotoArticleHourData(begin_date, begin_date, category);
+        }
+
+    }
+    //获取图文统计分时数据json
+    public   void getPhotoArticleHourData(String begin_date,String end_date,String category){
+
+
+        JSONObject weiXinData = getWeiXinData(begin_date, end_date, category);
+
+        //如果这个返回的数据为空的话，则自己添加数据
+        if(weiXinData.getJSONArray("list").size()==0){
+            if(PayForUtil.NAMELIST.size()==0){
+                //通过相应的种类获取事先设定的参数
+                PayForUtil.NAMELIST.addAll(PayForUtil.getCategory(category));
+            }
+
+            for(int i=0;i<12;i++){
+                //有几列就添加几列空数据
+                if(i<10){PayForUtil.DATALIST.add("0");}
+                else if(i==10) {PayForUtil.DATALIST.add("00:00:00");}
+
+                else if(i==11){
+                    PayForUtil.DATALIST.add(begin_date+" 00"+":"+"00"+":"+"00");
+                }
+
+            }
+
+
+
+        }
+        else{
+            //不为空的情况下添加NAMELIST
+            if(PayForUtil.NAMELIST.size()==0){
+                PayForUtil.NAMELIST.addAll(PayForUtil.getCategory(category));
+
+            }
+            //不为空的情况下则取出DATALIST数据
+            for(int i=0;i<weiXinData.getJSONArray("list").size(); i++){
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("total_online_time"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("int_page_read_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ori_page_read_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("add_to_fav_count"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("int_page_read_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ori_page_read_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("user_source"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("add_to_fav_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_count"));
+                if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==1){
+                    PayForUtil.DATALIST.add("00:00:00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" 00:00:00");
+                }else if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==3)
+                {
+                    PayForUtil.DATALIST.add("0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+"0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                }else {
+
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0, 2) + ":" + "00" + ":" + "00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                }
+
+
+            }
+
+
+
+        }
+        //若获取的就是昨天的日期的话，那么输出文件
+        if(begin_date.equals(PayForUtil.getFormatterDate(new Date()))){
+            List dataOut=new ArrayList<>();
+            dataOut.add(CommonUtils.removeBrackets(PayForUtil.NAMELIST.toString()));
+            for(int i=0;i<PayForUtil.DATALIST.size();i=i+12){
+                dataOut.add(PayForUtil.DATALIST.get(i+0)+","+
+                        PayForUtil.DATALIST.get(i+1)+","+
+                        PayForUtil.DATALIST.get(i+2)+","+
+                        PayForUtil.DATALIST.get(i+3)+","+
+                        PayForUtil.DATALIST.get(i+4)+","+
+                        PayForUtil.DATALIST.get(i+5)+","+
+                        PayForUtil.DATALIST.get(i+6)+","+
+                        PayForUtil.DATALIST.get(i+7)+","+
+                        PayForUtil.DATALIST.get(i+8)+","+
+                        PayForUtil.DATALIST.get(i+9)+","+
+                        PayForUtil.DATALIST.get(i+10)+","+
+                        PayForUtil.DATALIST.get(i+11));
+            }
+            try {
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + begin_date + ".csv"), "UTF-8", dataOut);
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + ".csv"), "UTF-8", dataOut);
+                //上传到服务器中
+                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2");
+
+            }catch (Exception e){
+                System.out.print(e.toString());
+            }finally {
+                PayForUtil.DATALIST.clear();
+                PayForUtil.NAMELIST.clear();
+            }
+        }
+    }
+
+
+    @Test
+    //图文分享转发分时数据
+    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+    public void getShareHourAllData(){
+
+        String category="usersharehour";
+
+        //循环取出历史记录
+        for(Integer i=0;i<PayForUtil.getDateLong(category);i++){
+            //获取一天的数据
+
+            String begin_date = PayForUtil.getDate(i,category);
+
+            getShareHourData(begin_date, begin_date, category);
+        }
+
+    }
+    //图文分享转发分时数据json
+    public   void getShareHourData(String begin_date,String end_date,String category){
+
+
+        JSONObject weiXinData = getWeiXinData(begin_date, end_date, category);
+
+        //如果这个返回的数据为空的话，则自己添加数据
+        if(weiXinData.getJSONArray("list").size()==0){
+            if(PayForUtil.NAMELIST.size()==0){
+                //通过相应的种类获取事先设定的参数
+                PayForUtil.NAMELIST.addAll(PayForUtil.getCategory(category));
+            }
+
             for(int i=0;i<6;i++){
                 //有几列就添加几列空数据
-                if(i<4) {PayForUtil.DATALIST.add("0");}
-                else if(i==4){
-                    PayForUtil.DATALIST.add("00:00:00");
-                }
+                if(i<4){PayForUtil.DATALIST.add("0");}
+                else if(i==4) {PayForUtil.DATALIST.add("00:00:00");}
+
                 else if(i==5){
                     PayForUtil.DATALIST.add(begin_date+" 00"+":"+"00"+":"+"00");
                 }
@@ -72,12 +289,24 @@ public class weiXinData {
             }
             //不为空的情况下则取出DATALIST数据
             for(int i=0;i<weiXinData.getJSONArray("list").size(); i++){
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_scene"));
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("user_source"));
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msg_user"));
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msg_type"));
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msg_count"));
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_user"));
+                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("share_count"));
+                if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==1){
+                    PayForUtil.DATALIST.add("00:00:00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" 00:00:00");
+                }else if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==3)
+                {
+                    PayForUtil.DATALIST.add("0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+"0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                }else {
+
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0, 2) + ":" + "00" + ":" + "00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                }
+
+
             }
 
 
@@ -93,22 +322,37 @@ public class weiXinData {
                         PayForUtil.DATALIST.get(i+2)+","+
                         PayForUtil.DATALIST.get(i+3)+","+
                         PayForUtil.DATALIST.get(i+4)+","+
-                        PayForUtil.DATALIST.get(i+5));
+                        PayForUtil.DATALIST.get(i+5))
+                       ;
             }
             try {
-                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" + begin_date + ".csv"), "UTF-8", dataOut);
-                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" + ".csv"), "UTF-8", dataOut);
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + begin_date + ".csv"), "UTF-8", dataOut);
+                FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                uplaodAndURL.upload("微信消息管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" +  begin_date+ ".csv"), "mrocker", "2");
-                // uplaodAndURL.upload("天气数据", new File("/data/dataspider/InterfaceAPI/weather_maincity/" + "天气数据" + ".csv"), "mrocker", "2");
-            }catch (Exception e){
+                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2");
 
+            }catch (Exception e){
+                System.out.print(e.toString());
             }finally {
                 PayForUtil.DATALIST.clear();
                 PayForUtil.NAMELIST.clear();
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //消息返回数据
     @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
@@ -166,8 +410,18 @@ public class weiXinData {
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msg_user"));
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msg_type"));
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("msg_count"));
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==1){
+                    PayForUtil.DATALIST.add("00:00:00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" 00:00:00");
+                }else if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==3)
+                {
+                    PayForUtil.DATALIST.add("0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+"0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                }else {
+
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0, 2) + ":" + "00" + ":" + "00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                }
             }
 
 
@@ -255,8 +509,18 @@ public class weiXinData {
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("fail_count"));
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("total_time_cost"));
                 PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("max_time_cost"));
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour") .toString().substring(0,2)+":"+"00"+":"+"00");
-                PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==1){
+                    PayForUtil.DATALIST.add("00:00:00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" 00:00:00");
+                }else if(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().length()==3)
+                {
+                    PayForUtil.DATALIST.add("0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+"0"+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,1)+":"+"00"+":"+"00");
+                }else {
+
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0, 2) + ":" + "00" + ":" + "00");
+                    PayForUtil.DATALIST.add(weiXinData.getJSONArray("list").getJSONObject(i).get("ref_date")+" "+weiXinData.getJSONArray("list").getJSONObject(i).get("ref_hour").toString().substring(0,2)+":"+"00"+":"+"00");
+                }
             }
 
 

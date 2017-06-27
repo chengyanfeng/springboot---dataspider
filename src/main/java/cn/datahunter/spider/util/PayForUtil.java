@@ -60,6 +60,67 @@ public class PayForUtil {
 
             return list;
         }
+        else if(category.equals("articlesummary")){
+            List list=new ArrayList<>();
+
+            list.add("title");//标题
+            list.add("int_page_read_count");//原文页的阅读次数
+            list.add("ori_page_read_count");//图文页的阅读次数
+            list.add("add_to_fav_count");//收藏的次数
+            list.add("int_page_read_user");//图文页（点击群发图文卡片进入的页面）的阅读人数
+            list.add("msgid");//请注意：这里的msgid实际上是由msgid（图文消息id，这也就是群发接口调用后返回的msg_data_id）和index（消息次序索引）组成， 例如12003_3， 其中12003是msgid，即一次群发的消息的id； 3为index，假设该次群发的图文消息共5个文章（因为可能为多图文），3表示5个中的第3个
+            list.add("ori_page_read_user");//原文页（点击图文页“阅读原文”进入的页面）的阅读人数，无原文页时此处数据为0
+            list.add("user_source");//在获取图文阅读分时数据时才有该字段，代表用户从哪里进入来阅读该图文。0:会话;1.好友;2.朋友圈;3.腾讯微博;4.历史消息页;5.其他
+            list.add("add_to_fav_user");//收藏的人数
+            list.add("share_user");//分享的人数
+            list.add("share_count");//分享的次数
+
+            try {
+                list.add("时间"); //日期
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            return list;
+        }else if(category.equals("userreadhour")){
+            List list=new ArrayList<>();
+
+            list.add("total_online_time");//阅读在线时长
+            list.add("int_page_read_count");//原文页的阅读次数
+            list.add("ori_page_read_count");//图文页的阅读次数
+            list.add("add_to_fav_count");//收藏的次数
+            list.add("int_page_read_user");//图文页（点击群发图文卡片进入的页面）的阅读人数
+            list.add("ori_page_read_user");//原文页（点击图文页“阅读原文”进入的页面）的阅读人数，无原文页时此处数据为0
+            list.add("user_source");//在获取图文阅读分时数据时才有该字段，代表用户从哪里进入来阅读该图文。0:会话;1.好友;2.朋友圈;3.腾讯微博;4.历史消息页;5.其他
+            list.add("add_to_fav_user");//收藏的人数
+            list.add("share_user");//分享的人数
+            list.add("share_count");//分享的次数
+            list.add("ref_hour");
+            try {
+                list.add("时间"); //日期
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            return list;
+        }else if(category.equals("usersharehour")){
+            List list=new ArrayList<>();
+            list.add("share_scene");//分享的场景1代表好友转发 2代表朋友圈 3代表腾讯微博 255代表其他
+            list.add("user_source");//在获取图文阅读分时数据时才有该字段，代表用户从哪里进入来阅读该图文。0:会话;1.好友;2.朋友圈;3.腾讯微博;4.历史消息页;5.其他
+            list.add("share_user");//分享的人数
+            list.add("share_count");//分享的次数
+            list.add("ref_hour");
+            try {
+                list.add("时间"); //日期
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            return list;
+        }
     return new ArrayList<>();
     }
     public  static String getCategoryName(String category){
@@ -67,9 +128,9 @@ public class PayForUtil {
             case "usersummary": return "微信用户管理统计";
             case "upstreammsghour": return "微信消息管理统计";
             case "interfacesummaryhour":return "微信接口管理统计";
-            case "articlesummary":return "图文群发数据统计";
-            case "userreadhour": return "图文数据统计";
-            case "usersharehour": return "图文分享转发数据统计";
+            case "articlesummary":return "微信图文群发数据统计";
+            case "userreadhour": return "微信图文数据统计";
+            case "usersharehour": return "微信图文分享转发数据统计";
         }
         return "";
     }
