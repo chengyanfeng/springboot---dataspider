@@ -1,5 +1,4 @@
 package cn.datahunter.spider.weiXinData;
-
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.PayForUtil;
 import cn.datahunter.spider.util.uplaodAndURL;
@@ -237,7 +236,7 @@ public class weiXinData {
     }
 
 
-    @Test
+
     //图文分享转发分时数据
     @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
     public void getShareHourAllData(){

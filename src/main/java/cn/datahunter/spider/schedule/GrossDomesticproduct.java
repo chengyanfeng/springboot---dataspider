@@ -6,6 +6,7 @@ import cn.datahunter.spider.util.GNPandGDPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.testng.annotations.Test;
 import us.codecraft.webmagic.Spider;
 
 /**
@@ -27,6 +28,7 @@ public class GrossDomesticproduct {
         grossDomestcProduct();
 
     }*/
+    @Test
        //各地的GDP的数据
     @Scheduled(cron = "0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
     public static void grossDomestcProduct() {
@@ -50,6 +52,7 @@ public class GrossDomesticproduct {
             if (i <=1) {
                 GNPandGDPUtil.timp =i;
                 url=  "http://data.stats.gov.cn/easyquery.htm?m=QueryData&dbcode=fsnd&rowcode=reg&colcode=sj&wds=%5B%7B%22wdcode%22%3A%22zb%22%2C%22valuecode%22%3A%22A02010"+i+"%22%7D%5D&dfwds=%5B%7B%22wdcode%22%3A%22sj%22%2C%22valuecode%22%3A%22LAST"+year+"%22%7D%5D&k1=1497248722710";
+
             }
             Gdp.ARG="AREA_GDP_YEAR";
             url = url.replace(CommonUtils.getBeforeMonth(0), CommonUtils.getBeforeMonth(0));
