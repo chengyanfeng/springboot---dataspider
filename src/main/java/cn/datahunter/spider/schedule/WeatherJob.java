@@ -220,7 +220,7 @@ public class WeatherJob {
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +"-"+"天气数据" + ".csv"), "UTF-8", resultData);
            System.out.print("-----------------已经输出文件了------------------");
 
-            uplaodAndURL.upload("天气数据", new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据" + ".csv"), "mrocker", "2");
+            uplaodAndURL.upload("天气数据", new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据" + ".csv"), "mrocker", "2","weather");
                 System.out.print("-------------------------文件已经上传上去了-------------------");
         } catch (IOException e) {
             e.printStackTrace();

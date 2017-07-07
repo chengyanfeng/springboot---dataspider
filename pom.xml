@@ -91,16 +91,26 @@
             <version>4.12</version>
         </dependency>
 
-       <!-- <dependency>
-            <groupId>org.zhi.bu.bao.one</groupId>
+        <dependency>
+            <groupId>net.sourceforge.javacsv</groupId>
+            <artifactId>javacsv</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <!--依赖本地jar包-->
+       <dependency>
+            <groupId>org.zhi</groupId>
             <artifactId>aipay</artifactId>
-            <systemPath>${basedir}/lib/alipay-sdk-java20161213173952.jar</systemPath>
+           <version>20170615110434</version>
+           <scope>system</scope>
+            <systemPath>${project.basedir}/lib/alipay-sdk-java20170615110434.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.zhi.bu.bao.two</groupId>
+            <groupId>org.bu</groupId>
             <artifactId>alpay</artifactId>
-            <systemPath>${basedir}/lib/alipay-trade-sdk-20161215.jar</systemPath>
-        </dependency>-->
+            <version>20161215</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/alipay-trade-sdk-20161215.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <!-- 打包spring boot应用 -->
@@ -109,7 +119,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
             </plugin>
 
         </plugins>

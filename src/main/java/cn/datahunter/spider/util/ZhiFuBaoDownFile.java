@@ -14,14 +14,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Created by Administrator on 2017/6/23 0023.
- */
+ * Created by Administrator on 2017/6/23 0023.*/
+
+
 public class ZhiFuBaoDownFile {
 
-    /* 下载远程文件并保存到本地
+/* 下载远程文件并保存到本地
     * @param remoteFilePath 远程文件路径
     * @param localFilePath 本地文件路径
     */
+
     //下载和解压方法合并
     public static boolean  downloadFileCopy(String downFile, String filePath) {
         //此方法只能用户HTTP协议

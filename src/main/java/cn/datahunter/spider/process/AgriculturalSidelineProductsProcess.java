@@ -99,7 +99,7 @@ try {
          FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
          FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + ".csv"), "UTF-8", dataOut);
             //上传到服务器中
-         uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2");
+         uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2","gdp");
      }
         } catch (IOException e) {
             e.printStackTrace();

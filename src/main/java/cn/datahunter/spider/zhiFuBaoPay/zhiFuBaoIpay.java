@@ -7,7 +7,6 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
 import com.alipay.api.response.AlipayDataDataserviceBillDownloadurlQueryResponse;
-import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.Date;
@@ -16,7 +15,7 @@ import java.util.Date;
 public class zhiFuBaoIpay {
 
 
-@Test
+
     public void getData() throws  Exception{
 
     String mykey="MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQ8ddXfsFIROJ45" +
@@ -66,7 +65,7 @@ AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipaydev.c
             if(b){
                 System.out.print("下载解压包成功+解压成功");
                 //上传到服务器中
-                uplaodAndURL.upload("支付宝交易账单", new File("/data/dataspider/InterfaceAPI/支付宝交易账单"+ PayForUtil.getFormatterDate(new Date())+".csv"), "mrocker", "2");
+                uplaodAndURL.upload("支付宝交易账单", new File("/data/dataspider/InterfaceAPI/支付宝交易账单"+ PayForUtil.getFormatterDate(new Date())+".csv"), "mrocker", "2","");
                 System.out.print("上传服务器成功");
             }
             else{
