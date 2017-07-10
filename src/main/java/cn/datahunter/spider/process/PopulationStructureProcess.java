@@ -2,6 +2,7 @@ package cn.datahunter.spider.process;
 
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.GNPandGDPUtil;
+import cn.datahunter.spider.util.uplaodAndURL;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -107,20 +108,20 @@ public class PopulationStructureProcess implements PageProcessor {
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + ".csv"), "UTF-8", dataOut);
-            //uplaodAndURL.upload("人口结构比", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
+            uplaodAndURL.upload("人口结构比", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
         }
         else if(GNPandGDPUtil.ColumnName.equals("Increase")){
             dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + ".csv"), "UTF-8", dataOut);
-            //uplaodAndURL.upload("人口增长率", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
+            uplaodAndURL.upload("人口增长率", new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
         }else if(GNPandGDPUtil.ColumnName.equals("Student")){
             dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + ".csv"), "UTF-8", dataOut);
-            //uplaodAndURL.upload("普通高校毕业人数", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
+            uplaodAndURL.upload("普通高校毕业人数", new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
 
         }
         } catch (IOException e) {
@@ -152,7 +153,7 @@ public class PopulationStructureProcess implements PageProcessor {
             for (int i = 0; i < nodes.size(); i++) {
                 dataLst.add(nodes.getJSONObject(i).get("cname").toString().substring(0,4)+"-01-01");
 
-                for (int a=0;a<dataArr.size();a=a+20) {
+                for (int a=0;a<dataArr.size();a=a+10) {
                     JSONObject data = (JSONObject) dataArr.getJSONObject(a+i).
                             getJSONObject("data");
                     if (null != data && StringUtils.isNotBlank(data.toString())) {

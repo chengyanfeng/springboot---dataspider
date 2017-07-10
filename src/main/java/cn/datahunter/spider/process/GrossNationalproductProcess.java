@@ -119,7 +119,7 @@ public class GrossNationalproductProcess implements PageProcessor {
                 //获取地区
                 dataLst.add(nodes.getJSONObject(i).get("cname").toString());
                 //获取年份
-                dataLst.add(jidu.getJSONObject(b).getString("name").substring(0,4));
+                dataLst.add(jidu.getJSONObject(b).getString("name").substring(0,4)+"-01-01");
                 //获取季度
                 dataLst.add(jidu.getJSONObject(b).getString("name"));
                 JSONObject data = (JSONObject) dataArr.getJSONObject(i*jidu.size()+b).

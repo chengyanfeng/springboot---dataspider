@@ -1,14 +1,12 @@
 package cn.datahunter.spider.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/3/16.
  */
-@Component
+
 public class GNPandGDPUtil {
     //全国居民年度数据---GNP
     public static final  String CONTRY_GNP_YEAR="全国居民年度数据";

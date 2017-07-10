@@ -30,6 +30,7 @@ public class PopulationNew {
 
     //获取总人口数
     //@Scheduled(cron="0 0/1 8-20 * * ?")
+
     @Scheduled(cron = "0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
     public static void Population() {
         GNPandGDPUtil.DATALIST.clear();

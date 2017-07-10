@@ -7,16 +7,21 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
 import com.alipay.api.response.AlipayDataDataserviceBillDownloadurlQueryResponse;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Date;
 
-
+@Component
 public class zhiFuBaoIpay {
 
 
+    //支付宝
 
-    public void getData() throws  Exception{
+    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+    public void getData() {
+
 
     String mykey="MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQ8ddXfsFIROJ45" +
             "GXkUDMeqGIWObEejCcRAuN54n/yRSsjSt+6C3VKIuKJbplpOEcPQqpqrr4+rx3ptGjfKVpX" +
@@ -58,14 +63,16 @@ AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipaydev.c
             "\"bill_type\":\"trade\"," +
             "\"bill_date\":\""+ "2017-06-25"+"\"" +
                 "  }");
-        AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
+      try {
+            AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
+
         if(response.isSuccess()){
             System.out.println("-----------------获取URL调用成功----------------------------");
             boolean b = ZhiFuBaoDownFile.downloadFile(response.getBillDownloadUrl(), "F:\\data\\dataspider\\InterfaceAPI\\");
             if(b){
                 System.out.print("下载解压包成功+解压成功");
                 //上传到服务器中
-                uplaodAndURL.upload("支付宝交易账单", new File("/data/dataspider/InterfaceAPI/支付宝交易账单"+ PayForUtil.getFormatterDate(new Date())+".csv"), "mrocker", "2","");
+                uplaodAndURL.upload("支付宝交易账单", new File("/data/dataspider/InterfaceAPI/支付宝交易账单" + PayForUtil.getFormatterDate(new Date()) + ".csv"), "mrocker", "2", "gdp");
                 System.out.print("上传服务器成功");
             }
             else{
@@ -76,6 +83,12 @@ AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipaydev.c
         } else {
             System.out.println("调用失败");
         }
+
+        }
+        catch (Exception e){
+            e.toString();
+        }
+    }
     }
 
-}
+

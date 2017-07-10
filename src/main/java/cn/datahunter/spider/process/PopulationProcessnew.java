@@ -1,5 +1,4 @@
 package cn.datahunter.spider.process;
-
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.GNPandGDPUtil;
 import cn.datahunter.spider.util.uplaodAndURL;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,7 +105,7 @@ public class PopulationProcessnew implements PageProcessor {
         for(int b=0;b<year.size();b++) {
             for (int i = 0; i < nodes.size(); i++) {
                 dataLst.add(nodes.getJSONObject(i).get("cname").toString());
-                dataLst.add(year.getJSONObject(b).getString("name").substring(0,4));
+                dataLst.add(year.getJSONObject(b).getString("name").substring(0,4)+"-01-01");
                 dataLst.add(year.getJSONObject(b).getString("name"));
 
                 JSONObject data = (JSONObject) dataArr.getJSONObject(i*year.size()+b).

@@ -104,7 +104,8 @@ public class GrossDomesticcproductProcess implements PageProcessor {
         for(int b=0;b<jidu.size();b++) {
             for (int i = 0; i < nodes.size(); i++) {
                 dataLst.add(nodes.getJSONObject(i).get("cname").toString());
-                dataLst.add(jidu.getJSONObject(b).getString("name").substring(0,4));
+                //获取年份
+                dataLst.add(jidu.getJSONObject(b).getString("name").substring(0,4)+"-01-01");
                 dataLst.add(jidu.getJSONObject(b).getString("name"));
 
                 JSONObject data = (JSONObject) dataArr.getJSONObject(i*jidu.size()+b).

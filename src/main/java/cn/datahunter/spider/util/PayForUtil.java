@@ -8,6 +8,7 @@ import java.util.*;
 /**
  * Created by Administrator on 2017/6/15 0015.
  */
+
 public class PayForUtil {
    public final static String APPID="wxcef2b3836a816181";
    public final static String secret="67525a90d4eae7c7ad47c592f982c1c2";

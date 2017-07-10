@@ -16,7 +16,6 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by Administrator on 2017/6/23 0023.*/
 
-
 public class ZhiFuBaoDownFile {
 
 /* 下载远程文件并保存到本地

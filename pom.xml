@@ -125,12 +125,14 @@
         <!--把本地jar包 打入jar 包中 -->
         <resources>
         <resource>
-        <directory>lib</directory>
-                <targetPath>BOOT-INF/lib/</targetPath>
+        <directory>src/lib</directory>
+            <!--把它打到跟其他包一样的lib下 -->
+                <targetPath>lib</targetPath>
                 <includes>
                    <include>**/*.jar</include>
             </includes>
             </resource>
+            <!--这个目前不知道什么作用 -->
              <resource>
                  <directory>src/main/resources</directory>
                  <targetPath>BOOT-INF/classes/</targetPath>
