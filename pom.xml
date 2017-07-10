@@ -96,20 +96,20 @@
             <artifactId>javacsv</artifactId>
             <version>2.0</version>
         </dependency>
-        <!--依赖本地jar包-->
-       <dependency>
+        <!--依赖本地jar包，这个maven 依赖，只会在编译时候不报错，但是运行时候还必须把jar 包打入到jar 包中-->
+     <dependency>
             <groupId>org.zhi</groupId>
             <artifactId>aipay</artifactId>
            <version>20170615110434</version>
            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/alipay-sdk-java20170615110434.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/alipay-sdk-java20170615110434.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bu</groupId>
             <artifactId>alpay</artifactId>
             <version>20161215</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/alipay-trade-sdk-20161215.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/alipay-trade-sdk-20161215.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -122,6 +122,20 @@
             </plugin>
 
         </plugins>
+        <!--把本地jar包 打入jar 包中 -->
+        <resources>
+        <resource>
+        <directory>lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                   <include>**/*.jar</include>
+            </includes>
+            </resource>
+             <resource>
+                 <directory>src/main/resources</directory>
+                 <targetPath>BOOT-INF/classes/</targetPath>
+               </resource>
+            </resources>
     </build>
 
 
