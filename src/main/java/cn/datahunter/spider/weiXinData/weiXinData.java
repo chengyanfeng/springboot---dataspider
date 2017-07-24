@@ -1,10 +1,10 @@
 package cn.datahunter.spider.weiXinData;
+
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.PayForUtil;
 import cn.datahunter.spider.util.uplaodAndURL;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -20,7 +20,7 @@ public class weiXinData {
    static SimpleDateFormat df = new SimpleDateFormat("yy-MM-dd");
 
     //取图文群发每日数据
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+   // @Scheduled(cron = "0 10 07 * * *", zone = "Asia/Shanghai")
     public void getPhotoArticleAllData(){
 
         String category="articlesummary";
@@ -114,7 +114,12 @@ public class weiXinData {
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + begin_date + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s :PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+s+"\""+","+"\""+"n"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+            uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2","gdp",th.toString());
 
             }catch (Exception e){
                 System.out.print(e.toString());
@@ -127,7 +132,7 @@ public class weiXinData {
 
 
     //获取图文统计分时数据
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+  //  @Scheduled(cron = "0 15 07 * * *", zone = "Asia/Shanghai")
     public void getPhotoArticleHourAllData(){
 
         String category="userreadhour";
@@ -228,7 +233,12 @@ public class weiXinData {
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + begin_date + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s :PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+s+"\""+","+"\""+"n"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+               uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2","gdp",th.toString());
 
             }catch (Exception e){
                 System.out.print(e.toString());
@@ -239,10 +249,8 @@ public class weiXinData {
         }
     }
 
-
-
     //图文分享转发分时数据
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+   // @Scheduled(cron = "0 20 07 * * *", zone = "Asia/Shanghai")
     public void getShareHourAllData(){
 
         String category="usersharehour";
@@ -333,7 +341,12 @@ public class weiXinData {
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + begin_date + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s :PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+s+"\""+","+"\""+"n"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+                uplaodAndURL.upload(PayForUtil.getCategoryName(category), new File("/data/dataspider/InterfaceAPI/" + PayForUtil.getCategoryName(category) +  begin_date+ ".csv"), "mrocker", "2","gdp",th.toString());
 
             }catch (Exception e){
                 System.out.print(e.toString());
@@ -346,20 +359,8 @@ public class weiXinData {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     //消息返回数据
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+   // @Scheduled(cron = "0 08 07 * * *", zone = "Asia/Shanghai")
     public void getNoticeAllData(){
 
         String category="upstreammsghour";
@@ -447,7 +448,12 @@ public class weiXinData {
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" + begin_date + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                 uplaodAndURL.upload("微信消息管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" +  begin_date+ ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s :PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+s+"\""+","+"\""+"n"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+                uplaodAndURL.upload("微信消息管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信消息管理统计" +  begin_date+ ".csv"), "mrocker", "2","gdp",th.toString());
 
             }catch (Exception e){
 
@@ -459,7 +465,8 @@ public class weiXinData {
     }
 
     //接口返回数据
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+
+    //@Scheduled(cron = "0 21 07 * * *", zone = "Asia/Shanghai")
     public void getInterfaceAllData(){
 
         String category="interfacesummaryhour";
@@ -546,7 +553,14 @@ public class weiXinData {
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信接口管理统计" + begin_date + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信接口管理统计" + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                uplaodAndURL.upload("微信接口管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信接口管理统计" +  begin_date+ ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s :PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+s+"\""+","+"\""+"n"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+
+
+              uplaodAndURL.upload("微信接口管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信接口管理统计" + begin_date + ".csv"), "mrocker", "2", "gdp", th.toString());
             }catch (Exception e){
 
             }finally {
@@ -560,7 +574,8 @@ public class weiXinData {
 
 
      //获取用户数据
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+
+  //  @Scheduled(cron = "0 24 07 * * *", zone = "Asia/Shanghai")
     public void getUserAllData(){
         String category="usersummary";
         //循环取出历史记录
@@ -633,7 +648,12 @@ public class weiXinData {
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信用户管理统计" + begin_date + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "微信用户管理统计" + ".csv"), "UTF-8", dataOut);
                 //上传到服务器中
-                uplaodAndURL.upload("微信用户管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信用户管理统计" +  begin_date+ ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s :PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+s+"\""+","+"\""+"n"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+               uplaodAndURL.upload("微信用户管理统计", new File("/data/dataspider/InterfaceAPI/" + "微信用户管理统计" +  begin_date+ ".csv"), "mrocker", "2","gdp",th.toString());
             }catch (Exception e){
 
             }finally {

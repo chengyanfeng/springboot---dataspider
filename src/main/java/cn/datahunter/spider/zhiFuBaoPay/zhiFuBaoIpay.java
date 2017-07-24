@@ -11,7 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class zhiFuBaoIpay {
@@ -19,11 +21,10 @@ public class zhiFuBaoIpay {
 
     //支付宝
 
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+    @Scheduled(cron = "0 10 12 * * *", zone = "Asia/Shanghai")
     public void getData() {
 
-
-    String mykey="MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQ8ddXfsFIROJ45" +
+        String mykey="MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQ8ddXfsFIROJ45" +
             "GXkUDMeqGIWObEejCcRAuN54n/yRSsjSt+6C3VKIuKJbplpOEcPQqpqrr4+rx3ptGjfKVpX" +
             "cPvxLDTpEHHgyMyrHXepovFgnf80KQAlcYOp/Eujma0Q6WKPc7kE9qcD2XbIE8dni/A4h" +
             "B9QiikTy4jwE4t0NdYYXu+a7fotyVC6W4IQujctV8TGFEuUKKUcxDs9w/krihQoNG0G2Z" +
@@ -72,7 +73,12 @@ AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipaydev.c
             if(b){
                 System.out.print("下载解压包成功+解压成功");
                 //上传到服务器中
-                uplaodAndURL.upload("支付宝交易账单", new File("/data/dataspider/InterfaceAPI/支付宝交易账单" + PayForUtil.getFormatterDate(new Date()) + ".csv"), "mrocker", "2", "gdp");
+                List<String> th=new ArrayList<>();
+                for(String s : PayForUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+                uplaodAndURL.upload("支付宝交易账单", new File("/data/dataspider/InterfaceAPI/支付宝交易账单" + PayForUtil.getFormatterDate(new Date()) + ".csv"), "mrocker", "2", "gdp",th.toString());
                 System.out.print("上传服务器成功");
             }
             else{

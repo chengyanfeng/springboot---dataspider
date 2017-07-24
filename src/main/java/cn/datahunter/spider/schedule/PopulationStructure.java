@@ -14,7 +14,6 @@ public class PopulationStructure {
     @Autowired
     PopulationStructureProcess PopulationStructureProcess;
 
-
     @Scheduled(cron="0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
     public void executeStructure() {
         GNPandGDPUtil.DATALIST.clear();
@@ -25,8 +24,8 @@ public class PopulationStructure {
         Spider.create(new PopulationStructureProcess()).addUrl(url)
                 .thread(1).run();
     }
-    @Scheduled(cron="0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
 
+    @Scheduled(cron="0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
     public void executeIncrease() {
         GNPandGDPUtil.DATALIST.clear();
         GNPandGDPUtil.NAMELIST.clear();

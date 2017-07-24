@@ -1,6 +1,8 @@
 package cn.datahunter.spider.process;
+
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.GNPandGDPUtil;
+import cn.datahunter.spider.util.PayForUtil;
 import cn.datahunter.spider.util.uplaodAndURL;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +63,7 @@ public class PopulationProcessnew implements PageProcessor {
         List<String> datalist = AgriculturalMap.get("data");
         if(GNPandGDPUtil.timp==1){
             for(int i=0;i<datalist.size();i=i+4) {
-                GNPandGDPUtil.DATALIST.add(datalist.get(0+i).replace("自治区","").replace("省","").replace("市", "") + "," +
+                GNPandGDPUtil.DATALIST.add(datalist.get(0+i).replace("自治区","").replace("省","").replace("市", "").replace("回族", "").replace("维吾尔","").replace("壮族","") + "," +
                         datalist.get(1+i) + "," +
                         datalist.get(2+i)
                         + "," +
@@ -85,7 +88,12 @@ public class PopulationProcessnew implements PageProcessor {
                 dataOut.addAll(GNPandGDPUtil.DATALIST);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
                 FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + ".csv"), "UTF-8", dataOut);
-                uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2","gdp");
+                List<String> th=new ArrayList<>();
+                for(String s : GNPandGDPUtil.NAMELIST){
+                    String typeAndName = PayForUtil.getthType(s);
+                    th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+                }
+                uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp",th.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();

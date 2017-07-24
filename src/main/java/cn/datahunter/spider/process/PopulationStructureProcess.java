@@ -2,6 +2,7 @@ package cn.datahunter.spider.process;
 
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.GNPandGDPUtil;
+import cn.datahunter.spider.util.PayForUtil;
 import cn.datahunter.spider.util.uplaodAndURL;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -108,20 +109,35 @@ public class PopulationStructureProcess implements PageProcessor {
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + ".csv"), "UTF-8", dataOut);
-            uplaodAndURL.upload("人口结构比", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
+            List<String> th=new ArrayList<>();
+            for(String s : GNPandGDPUtil.NAMELIST){
+                String typeAndName = PayForUtil.getthType(s);
+                th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+            }
+            uplaodAndURL.upload("人口结构比", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp",th.toString());
         }
         else if(GNPandGDPUtil.ColumnName.equals("Increase")){
             dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + ".csv"), "UTF-8", dataOut);
-            uplaodAndURL.upload("人口增长率", new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
+            List<String> th=new ArrayList<>();
+            for(String s : GNPandGDPUtil.NAMELIST){
+                String typeAndName = PayForUtil.getthType(s);
+                th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+            }
+            uplaodAndURL.upload("人口增长率", new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp",th.toString());
         }else if(GNPandGDPUtil.ColumnName.equals("Student")){
             dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + ".csv"), "UTF-8", dataOut);
-            uplaodAndURL.upload("普通高校毕业人数", new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp");
+            List<String> th=new ArrayList<>();
+            for(String s : GNPandGDPUtil.NAMELIST){
+                String typeAndName = PayForUtil.getthType(s);
+                th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+            }
+            uplaodAndURL.upload("普通高校毕业人数", new File("/data/dataspider/InterfaceAPI/" + "普通高校毕业人数" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp",th.toString());
 
         }
         } catch (IOException e) {

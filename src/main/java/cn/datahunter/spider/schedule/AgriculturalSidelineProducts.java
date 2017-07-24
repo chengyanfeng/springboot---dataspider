@@ -31,11 +31,12 @@ public class AgriculturalSidelineProducts {
     //各地的农产品价格--年度
     //@Scheduled(cron = "0 0 0 15 1/4 ?", zone = "Asia/Shanghai")
 
-    @Scheduled(cron="0 0 0 1 1/6 ?")
+    @Scheduled(cron="0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
+
     public static void agriculturalProducts() {
         GNPandGDPUtil.DATALIST.clear();
         GNPandGDPUtil.NAMELIST.clear();
-        GNPandGDPUtil.NAMELIST.add("地区");
+        GNPandGDPUtil.NAMELIST.add("省市");
         GNPandGDPUtil.NAMELIST.add("年份");
         GNPandGDPUtil.NAMELIST.add("季度");
         String url = "";

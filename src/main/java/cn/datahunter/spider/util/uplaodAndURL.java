@@ -36,8 +36,10 @@ public class uplaodAndURL {
      * 上传文件
      * key="mrocker"
      * mode不是累加的标记1，累加2
+     * th:必填项，表头的json 字符串
      */
-    public static void upload(String name,File file,String key,String mode,String fmt) {
+    public static void upload(String name,File file,String key,String mode,String fmt,String th) {
+
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost("http://dev.datahunter.cn/api/upload");
         try {
@@ -71,7 +73,7 @@ public class uplaodAndURL {
                     String url= msg.getString("url");
                     System.out.print("------获取url的值-->"+url.toString());
                     //上传url和name,和key
-                    Post(name,url,key,mode,fmt);
+                    Post(name,url,key,mode,fmt,th);
                     System.out.print(name);
 
                 }
@@ -96,7 +98,7 @@ public class uplaodAndURL {
      * 发送 post请求访问本地应用并根据传递参数不同返回不同结果
      */
 
-    public static void Post(String name,String url,String key,String mode,String fmt){
+    public static void Post(String name,String url,String key,String mode,String fmt,String th){
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
             HttpPost post = new HttpPost("http://dev.datahunter.cn/api/pub");          //这里用上本机的某个工程做测试
@@ -115,6 +117,7 @@ public class uplaodAndURL {
             list.add(new BasicNameValuePair("key",key));
             list.add(new BasicNameValuePair("mode",mode));
             list.add(new BasicNameValuePair("fmt",fmt));
+            list.add(new BasicNameValuePair("th",th));
             //url格式编码
             UrlEncodedFormEntity uefEntity = new UrlEncodedFormEntity(list,"UTF-8");
             post.setEntity(uefEntity);

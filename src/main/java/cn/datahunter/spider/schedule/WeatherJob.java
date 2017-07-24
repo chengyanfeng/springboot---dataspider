@@ -3,6 +3,7 @@ package cn.datahunter.spider.schedule;
 
 import cn.datahunter.spider.util.CommonUtils;
 import cn.datahunter.spider.util.Constants;
+import cn.datahunter.spider.util.PayForUtil;
 import cn.datahunter.spider.util.uplaodAndURL;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -22,7 +23,7 @@ import java.util.*;
  * Created by root on 2017/3/20.
  */
 @Component
-public class WeatherJob {
+public class WeatherJob  {
 
     /**
      * 当天主要城市/区县 天气
@@ -34,9 +35,9 @@ public class WeatherJob {
     }*/
 
 
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Shanghai")
+    @Scheduled(cron = "0 05 07 * * *", zone = "Asia/Shanghai")
     public void execute1() throws ParseException, IOException {
-
+        System.out.print("天气开始执行");
         getTodayWeather(false);
        //getTodayWeather(true);
     }
@@ -145,7 +146,7 @@ public class WeatherJob {
      * countryFlag true表示区县，false是主要城市
      */
     private  void getTodayWeather(boolean countryFlag) throws IOException {
-
+        System.out.print("进入执行方法.........");
         //区县或主要城市
         Map<String, String> area3Map = countryFlag ? getAreaMap() : getMainSimpleMap();
 
@@ -164,17 +165,17 @@ public class WeatherJob {
             //从未来天气中获得当天的
             String urlStr = "http://api.k780.com:88/?app=weather.future&weaid=" + weaid + "&&appkey=23789&sign=abe1ba69c5f65c3fd1d95c535a5f7ed4&format=json";
             String remoteData = CommonUtils.getRemoteData(urlStr);
-
+            System.out.print("获取循环.........");
             JSONObject jsonObj = JSON.parseObject(remoteData);
             jsonObj = (JSONObject) jsonObj.getJSONArray("result").get(0);
-
+            System.out.print("解析完成........");
             StringBuilder fullInformation = new StringBuilder();
 
             String citynm = jsonObj.getString("citynm");
             fullInformation.append(citynm).append(",").append(cityAndProvince).append(",");
 
 
-
+            System.out.print("正在抓取中........");
             String weather = jsonObj.getString("weather");
             fullInformation.append(weather).append(",");
 
@@ -215,12 +216,16 @@ public class WeatherJob {
         String time = CommonUtils.getBeforeMonth(0, "yyyy-MM-dd");
 
         try {
-            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据"  +".csv"), "UTF-8", resultData);
+            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" +"天气数据"+".csv"), "UTF-8", resultData);
 
-            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +"-"+"天气数据" + ".csv"), "UTF-8", resultData);
+            FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) +"-"+"天气数据" + ".csv"), "UTF-8", resultData);
            System.out.print("-----------------已经输出文件了------------------");
-
-            uplaodAndURL.upload("天气数据", new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据" + ".csv"), "mrocker", "2","weather");
+            List<String> th=new ArrayList<>();
+            for(String s : PayForUtil.NAMELIST){
+                String typeAndName = PayForUtil.getthType(s);
+                th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
+            }
+          uplaodAndURL.upload("天气数据", new File("/data/dataspider/InterfaceAPI/" + catalog + "/" + "天气数据" + ".csv"), "mrocker", "2", "weather",th.toString());
                 System.out.print("-------------------------文件已经上传上去了-------------------");
         } catch (IOException e) {
             e.printStackTrace();
@@ -298,5 +303,6 @@ public class WeatherJob {
         }
         return area3;
     }
+
 
 }

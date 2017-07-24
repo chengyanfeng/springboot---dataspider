@@ -6,6 +6,7 @@ import cn.datahunter.spider.util.GNPandGDPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.testng.annotations.Test;
 import us.codecraft.webmagic.Spider;
 
 /**
@@ -29,12 +30,12 @@ public class GrossNationalproduct {
     }*/
 
     //
-
+@Test
     @Scheduled(cron = "0 0 0 1 1/6 ? ", zone = "Asia/Shanghai")
     public static void GrossNationProcess() {
         GNPandGDPUtil.DATALIST.clear();
         GNPandGDPUtil.NAMELIST.clear();
-        GNPandGDPUtil.NAMELIST.add("地区");
+        GNPandGDPUtil.NAMELIST.add("省市");
         GNPandGDPUtil.NAMELIST.add("年份");
         GNPandGDPUtil.NAMELIST.add("季度");
         String url = "";
