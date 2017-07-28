@@ -93,7 +93,7 @@ public class PopulationProcessnew implements PageProcessor {
                     String typeAndName = PayForUtil.getthType(s);
                     th.add("{"+"\""+"o"+"\""+":"+"\""+PayForUtil.getthName(s)+"\""+","+"\""+"n"+"\""+":"+"\""+s+"\""+","+"\""+"type"+"\""+":"+"\""+typeAndName+"\""+"}");
                 }
-                uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp",th.toString());
+                uplaodAndURL.upload(GNPandGDPUtil.getGNPName(ARG), new File("/data/dataspider/InterfaceAPI/" + GNPandGDPUtil.getGNPName(ARG) + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "1", "gdp",th.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();

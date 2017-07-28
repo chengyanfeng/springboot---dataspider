@@ -34,7 +34,7 @@ public class PopulationStructureProcess implements PageProcessor {
                     .setRetryTimes(3)
                     .setCycleRetryTimes(3)
                     .setTimeOut(60000)
-                    .addCookie("JSESSIONID", "381EA347B80FE54C19211306EDF85553")
+                    .addCookie("JSESSIONID", "FAF311F08F2A174E67E5776D2B8D1C2C")
                     .addCookie("u", "6")
                     .addHeader("Accept",
                             "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
@@ -61,7 +61,9 @@ public class PopulationStructureProcess implements PageProcessor {
         Map<String, List> populationMap = getPopulation(dataLst, returnData);
 
         List<String> datalist = populationMap.get("data");
-        GNPandGDPUtil.NAMELIST.addAll(populationMap.get("namelist"));
+        if(GNPandGDPUtil.NAMELIST.size()==0) {
+            GNPandGDPUtil.NAMELIST.addAll(populationMap.get("namelist"));
+        }
       if(GNPandGDPUtil.ColumnName.equals("Structure")) {
           for (int i = 0; i < datalist.size(); i = i + 8) {
               GNPandGDPUtil.DATALIST.add(datalist.get(i) + "," +
@@ -104,7 +106,7 @@ public class PopulationStructureProcess implements PageProcessor {
 
       }
         try {
-        if(GNPandGDPUtil.ColumnName.equals("Structure")) {
+        if(GNPandGDPUtil.ColumnName.equals("Structure")&&GNPandGDPUtil.timp==2015) {
             dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
@@ -116,7 +118,7 @@ public class PopulationStructureProcess implements PageProcessor {
             }
             uplaodAndURL.upload("人口结构比", new File("/data/dataspider/InterfaceAPI/" + "人口结构比" + CommonUtils.getBeforeMonth(0) + ".csv"), "mrocker", "2", "gdp",th.toString());
         }
-        else if(GNPandGDPUtil.ColumnName.equals("Increase")){
+        else if(GNPandGDPUtil.ColumnName.equals("Increase")&&GNPandGDPUtil.timp==2015){
             dataOut.add(CommonUtils.removeBrackets(GNPandGDPUtil.NAMELIST.toString()));
             dataOut.addAll(GNPandGDPUtil.DATALIST);
             FileUtils.writeLines(new File("/data/dataspider/InterfaceAPI/" + "人口增长率" + CommonUtils.getBeforeMonth(0) + ".csv"), "UTF-8", dataOut);
@@ -144,13 +146,14 @@ public class PopulationStructureProcess implements PageProcessor {
             e.printStackTrace();
         }finally {
 
-            GNPandGDPUtil.DATALIST.clear();
-            GNPandGDPUtil.NAMELIST.clear();
-            GNPandGDPUtil.ColumnName="";
         }
     }
 
     public Map<String,List> getPopulation(List<String> dataLst,JSONObject returnData){
+        int b=20;
+        if(GNPandGDPUtil.ColumnName.equals("Structure")){
+            b=1;
+        }
         Map<String,List> map=new HashMap<>();
         List<String> namelist=new ArrayList<>();
         namelist.add("年份");
@@ -169,7 +172,7 @@ public class PopulationStructureProcess implements PageProcessor {
             for (int i = 0; i < nodes.size(); i++) {
                 dataLst.add(nodes.getJSONObject(i).get("cname").toString().substring(0,4)+"-01-01");
 
-                for (int a=0;a<dataArr.size();a=a+10) {
+                for (int a=0;a<dataArr.size();a=a+b) {
                     JSONObject data = (JSONObject) dataArr.getJSONObject(a+i).
                             getJSONObject("data");
                     if (null != data && StringUtils.isNotBlank(data.toString())) {

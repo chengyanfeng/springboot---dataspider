@@ -26,15 +26,15 @@ public class PopulationNew {
 
 
 
-    @Test
 
+@Test
     @Scheduled(cron = "0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
     public static void Population() {
         GNPandGDPUtil.DATALIST.clear();
         GNPandGDPUtil.NAMELIST.clear();
         GNPandGDPUtil.NAMELIST.add("省市");
-        GNPandGDPUtil.NAMELIST.add("年份");
-        GNPandGDPUtil.NAMELIST.add("季度");
+        GNPandGDPUtil.NAMELIST.add("时间");
+        GNPandGDPUtil.NAMELIST.add("年度");
         String url = "";
         char ch='A';
         String year=null;

@@ -6,6 +6,7 @@ import cn.datahunter.spider.util.GNPandGDPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.testng.annotations.Test;
 import us.codecraft.webmagic.Spider;
 
 /**
@@ -32,7 +33,7 @@ public class AgriculturalSidelineProducts {
     //@Scheduled(cron = "0 0 0 15 1/4 ?", zone = "Asia/Shanghai")
 
     @Scheduled(cron="0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
-
+@Test
     public static void agriculturalProducts() {
         GNPandGDPUtil.DATALIST.clear();
         GNPandGDPUtil.NAMELIST.clear();

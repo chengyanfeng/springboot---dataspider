@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,27 +26,20 @@ import java.util.*;
 @Component
 public class WeatherJob  {
 
-    /**
-     * 当天主要城市/区县 天气
-     */
-   /*public static void main(String[] args) throws IOException {
-        getTodayWeather(false);
-        getTodayWeather(true);
 
-    }*/
-
-
+    @Test
     @Scheduled(cron = "0 05 07 * * *", zone = "Asia/Shanghai")
     public void execute1() throws ParseException, IOException {
         System.out.print("天气开始执行");
         getTodayWeather(false);
-       //getTodayWeather(true);
+    //getTodayWeather(true);
     }
 
     /**
      * 历史区县天气
      */
 //    @Scheduled(cron = "0 5 0 23 3 *", zone = "Asia/Shanghai")
+
     public void execute3() throws ParseException, IOException {
         List<String> datesBetweenTwoDate = CommonUtils.getDatesBetweenTwoDate("2015-07-07", "2017-03-22");
         getHistoryWeather(true, datesBetweenTwoDate);
@@ -55,9 +49,10 @@ public class WeatherJob  {
      * 历史主要城市天气
      */
 //    @Scheduled(cron = "0 5 0 23 3 *", zone = "Asia/Shanghai")
+    @Test
     public void execute4() throws ParseException, IOException {
-        List<String> datesBetweenTwoDate = CommonUtils.getDatesBetweenTwoDate("2015-07-07", "2017-03-22");
-        getHistoryWeather(true, datesBetweenTwoDate);
+        List<String> datesBetweenTwoDate = CommonUtils.getDatesBetweenTwoDate("2015-07-10", "2017-03-22");
+        getHistoryWeather(false, datesBetweenTwoDate);
     }
 
     private void getHistoryWeather(boolean countryFlag, List<String> dateList) throws IOException {
@@ -65,7 +60,7 @@ public class WeatherJob  {
         Map<String, String> areaMap = countryFlag ? getAreaMap() : getMainSimpleMap();
 
         String columnName = countryFlag ? "区县,城市,省份,日期,天气,最低气温,最高气温,风向,风速" :
-                "城市,省份,日期,天气,最低气温,最高气温,风向,风速,空气质量级别";
+                "城市,省份,天气,最低气温,最高气温,风向,风速,空气质量级别时间";
 
         List<String> resultData = new ArrayList<>();
         resultData.add(columnName);
@@ -101,7 +96,7 @@ public class WeatherJob  {
                 String citynm = entity.getString("citynm");
                 fullInformation.append(citynm).append(",").append(cityAndProvince).append(",");
 
-                fullInformation.append(date).append(",");
+
 
                 String weather = entity.getString("weather");
                 fullInformation.append(weather).append(",");
@@ -122,7 +117,7 @@ public class WeatherJob  {
                     String aqi = entity.getString("aqi");
                     fullInformation.append(",").append(aqi);
                 }
-
+                fullInformation.append(date);
                 resultData.add(fullInformation.toString());
             }
             try {
@@ -151,7 +146,7 @@ public class WeatherJob  {
         Map<String, String> area3Map = countryFlag ? getAreaMap() : getMainSimpleMap();
 
         String columnName = countryFlag ? "区县,城市,省份,天气,最低气温,最高气温,风向,风速,时间" :
-                "城市,省份,天气,最低气温,最高气温,风向,风速,空气质量级别,时间";
+                "城市,省份,天气,最低气温℃,最高气温℃,风向,风速,空气质量级别,AQI,时间";
 
         List<String> resultData = new ArrayList<>();
         resultData.add(columnName);
@@ -164,6 +159,7 @@ public class WeatherJob  {
 
             //从未来天气中获得当天的
             String urlStr = "http://api.k780.com:88/?app=weather.future&weaid=" + weaid + "&&appkey=23789&sign=abe1ba69c5f65c3fd1d95c535a5f7ed4&format=json";
+
             String remoteData = CommonUtils.getRemoteData(urlStr);
             System.out.print("获取循环.........");
             JSONObject jsonObj = JSON.parseObject(remoteData);
@@ -180,10 +176,10 @@ public class WeatherJob  {
             fullInformation.append(weather).append(",");
 
             String temp_low = jsonObj.getString("temp_low");
-            fullInformation.append(temp_low+"℃").append(",");
+            fullInformation.append(temp_low).append(",");
 
             String temp_high = jsonObj.getString("temp_high");
-            fullInformation.append(temp_high+"℃").append(",");
+            fullInformation.append(temp_high).append(",");
 
             String wind = jsonObj.getString("wind");
             fullInformation.append(wind).append(",");
@@ -197,8 +193,10 @@ public class WeatherJob  {
                 remoteData = CommonUtils.getRemoteData(url);
                 jsonObj = JSON.parseObject(remoteData).getJSONObject("result");
                 String aqi_levnm = jsonObj.getString("aqi_levnm");
-
+                String aqi=jsonObj.getString("aqi");
                 fullInformation.append(",").append(aqi_levnm);
+                fullInformation.append(",").append(aqi);
+
             }
 
             fullInformation.append(",").append(day);
@@ -241,42 +239,42 @@ public class WeatherJob  {
     private  Map<String, String> getMainSimpleMap() {
 
         Map<String, String> mainCityMap = new HashMap<>();
-        mainCityMap.put("beijing", "北京");
-        mainCityMap.put("tianjin", "天津");
+            mainCityMap.put("beijing", "北京");
+            mainCityMap.put("tianjin", "天津");
         mainCityMap.put("shijiazhuang", "河北");
-        mainCityMap.put("taiyuan", "山西");
-        mainCityMap.put("huhehaote", "内蒙古");
-        mainCityMap.put("shenyang", "辽宁");
-        mainCityMap.put("dalian", "辽宁");
-        mainCityMap.put("changchun", "吉林");
-        mainCityMap.put("haerbin", "黑龙江");
-        mainCityMap.put("shanghai", "上海");
-        mainCityMap.put("nanjing", "江苏");
-        mainCityMap.put("hangzhou", "浙江");
-        mainCityMap.put("ningbo", "浙江");
-        mainCityMap.put("hefei", "安徽");
-        mainCityMap.put("fuzhou", "福建");
-        mainCityMap.put("xiamen", "福建");
-        mainCityMap.put("nanchang", "江西");
-        mainCityMap.put("jinan", "山东");
-        mainCityMap.put("qingdao", "山东");
-        mainCityMap.put("zhengzhou", "河南");
-        mainCityMap.put("wuhan", "湖北");
-        mainCityMap.put("changsha", "湖南");
-        mainCityMap.put("guangzhou", "广东");
-        mainCityMap.put("shenzhen", "广东");
-        mainCityMap.put("nanning", "广西");
-        mainCityMap.put("haikou", "海南");
-        mainCityMap.put("chongqing", "重庆");
-        mainCityMap.put("chengdu", "四川");
-        mainCityMap.put("guiyang", "贵州");
-        mainCityMap.put("kunming", "云南");
-        mainCityMap.put("lasa", "西藏");
-        mainCityMap.put("xian", "陕西");
-        mainCityMap.put("lanzhou", "甘肃");
-        mainCityMap.put("xining", "青海");
-        mainCityMap.put("yinchuan", "宁夏");
-        mainCityMap.put("wulumuqi", "新疆");
+             mainCityMap.put("taiyuan", "山西");
+          mainCityMap.put("huhehaote", "内蒙古");
+            mainCityMap.put("shenyang", "辽宁");
+              mainCityMap.put("dalian", "辽宁");
+          mainCityMap.put("changchun", "吉林");
+            mainCityMap.put("haerbin", "黑龙江");
+           mainCityMap.put("shanghai", "上海");
+            mainCityMap.put("nanjing", "江苏");
+           mainCityMap.put("hangzhou", "浙江");
+             mainCityMap.put("ningbo", "浙江");
+              mainCityMap.put("hefei", "安徽");
+            mainCityMap.put("fuzhou", "福建");
+            mainCityMap.put("xiamen", "福建");
+           mainCityMap.put("nanchang", "江西");
+              mainCityMap.put("jinan", "山东");
+            mainCityMap.put("qingdao", "山东");
+          mainCityMap.put("zhengzhou", "河南");
+              mainCityMap.put("wuhan", "湖北");
+           mainCityMap.put("changsha", "湖南");
+           mainCityMap.put("guangzhou", "广东");
+            mainCityMap.put("shenzhen", "广东");
+             mainCityMap.put("nanning", "广西");
+              mainCityMap.put("haikou", "海南");
+           mainCityMap.put("chongqing", "重庆");
+             mainCityMap.put("chengdu", "四川");
+             mainCityMap.put("guiyang", "贵州");
+             mainCityMap.put("kunming", "云南");
+                mainCityMap.put("lasa", "西藏");
+                mainCityMap.put("xian", "陕西");
+             mainCityMap.put("lanzhou", "甘肃");
+              mainCityMap.put("xining", "青海");
+            mainCityMap.put("yinchuan", "宁夏");
+            mainCityMap.put("wulumuqi", "新疆");
 
         return mainCityMap;
     }

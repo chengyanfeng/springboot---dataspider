@@ -170,20 +170,50 @@ public class PayForUtil {
     }
 
         public static  String getthType(String name){
-            if(name.contains("int")||name.contains("count")||name.contains("page")||name.contains("share")||name.contains("user")||name.contains("type")||name.contains("数")||name.contains("人口")||name.contains("比")||name.contains("cost")||name.contains("元"))
+            if(name.contains("int")||name.contains("count")||name.contains("page")||name.contains("share")||name.contains("user")||name.contains("type")||name.contains("数")||name.contains("人口")||name.contains("比")||name.contains("cost")||name.contains("元")||name.contains("温度")||name.contains("AQI"))
             {
                 return "number";
             }
             else if(name.contains("msgid")||name.contains("total")||name.contains("max")||name.contains("地区")||name.contains("季度")||name.contains("ref_hour")){
                 return "text";
             }
-            else if(name.contains("时间")||name.contains("年份")||name.contains("年")||name.contains("date")){
+            else if(name.contains("时间")||name.contains("年份")||name.contains("date")){
                 return "date";
             }else {
                 return "text";
             }}
 
     public static  String getthName(String name){
+
+        if(name.equals("地级区划数(个)"))
+        {
+            return "diqucount";
+        }
+        if(name.equals("地级市数(个)"))
+        {
+            return "dijishishu";
+        }
+        if(name.equals("县级区划数(个)"))
+        {
+            return "xianjiqushu";
+        }
+        if(name.equals("市辖区数(个)"))
+        {
+            return "shixiaqushu";
+        }
+        if(name.equals("县级市数(个)"))
+        {
+            return "xianjishishu";
+        }
+        if(name.equals("县数(个)"))
+        {
+            return "xianshu";
+        }
+        if(name.equals("自治县数(个)"))
+        {
+            return "zhizixianshu";
+        }
+
         if(name.equals("ref_date"))
         {
             return "数据日期";
@@ -451,9 +481,9 @@ public class PayForUtil {
             return "province";
         }else if(name.equals("天气")){
             return "weather";
-        }else if(name.equals("最低气温")){
+        }else if(name.equals("最低气温℃")){
             return "losttemperature";
-        }else if(name.equals("最高气温")){
+        }else if(name.equals("最高气温℃")){
             return "toptemperature";
         }else if(name.equals("风向")){
             return "wind";
@@ -465,6 +495,12 @@ public class PayForUtil {
         }
         else if(name.equals("时间")){
             return "date";
+        }
+        else if(name.equals("省市")){
+            return "city";
+        }
+        else if(name.equals("年度")){
+            return "year";
         }
 
 

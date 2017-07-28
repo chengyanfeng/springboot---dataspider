@@ -23,15 +23,16 @@ public class GrossDomesticproduct {
     public void doExecute() {
         grossDomestcProduct();
     }
-        @Test
+    @Test
+
      //各地的GDP的数据
     @Scheduled(cron = "0 0 0 1 1/6 ?", zone = "Asia/Shanghai")
     public static void grossDomestcProduct() {
         GNPandGDPUtil.DATALIST.clear();
         GNPandGDPUtil.NAMELIST.clear();
         GNPandGDPUtil.NAMELIST.add("省市");
-        GNPandGDPUtil.NAMELIST.add("年份");
-        GNPandGDPUtil.NAMELIST.add("季度");
+        GNPandGDPUtil.NAMELIST.add("时间");
+        GNPandGDPUtil.NAMELIST.add("年度");
         String url = "";
         char ch='A';
         String year=null;

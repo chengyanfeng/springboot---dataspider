@@ -30,7 +30,7 @@ public class GrossNationalproduct {
     }*/
 
     //
-@Test
+    @Test
     @Scheduled(cron = "0 0 0 1 1/6 ? ", zone = "Asia/Shanghai")
     public static void GrossNationProcess() {
         GNPandGDPUtil.DATALIST.clear();
